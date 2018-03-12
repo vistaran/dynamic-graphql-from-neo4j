@@ -33,4 +33,4 @@ e.g. Passing "Who has procurement code 63G?" will return nodes with data related
 
 Well, thats all! Feel free to ask any questions.
 
-Created along with https://github.com/neo4j-graphql/neo4j-graphql-js
+Created with https://github.com/neo4j-graphql/neo4j-graphql-js
