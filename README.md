@@ -1,8 +1,7 @@
 # dynamic-graphql-from-neo4j
+Generates GraphQL Schemas And Resolvers for Neo4j Database.
 
 Server Start Command `nohup nodemon ./example/graphql-tools/server.js --exec babel-node -e js </dev/null &`
-
-Generates GraphQL Schemas And Resolvers for Neo4j Database.
 
 ## Features
 
