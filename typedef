@@ -1,0 +1,1228 @@
+type Business_Unit {
+	businessUnitID: ID!
+	name: String
+	Business_Entity: [Business_Entity] @relation(name: "contains_business_entity", direction:"OUT")
+	Business_Area: [Business_Area] @relation(name: "is_located_in_business_area", direction:"OUT")
+}
+
+type Business_Entity {
+	businessEntityID: ID!
+	name: String
+	Business_Department: [Business_Department] @relation(name: "contains_business_department", direction:"OUT")
+}
+
+type Employee {
+	name: String
+	Item_Count: [Item_Count] @relation(name: "requested_item_count", direction:"OUT")
+	Item_Description: [Item_Description] @relation(name: "requested_item_description", direction:"OUT")
+	Item: [Item] @relation(name: "requested_item_name", direction:"OUT")
+	Originated_Site_Person: [Originated_Site_Person] @relation(name: "is_located_on", direction:"OUT")
+	Procurement_Code: [Procurement_Code] @relation(name: "created_procurement_code", direction:"OUT")
+	Purchaser_person: [Purchaser_person] @relation(name: "sent_internal_request_to", direction:"OUT")
+	Invoice: [Invoice] @relation(name: "invoice_submited_by_employee", direction:"OUT")
+	Proposal: [Proposal] @relation(name: "proposal_received_from_seller_company", direction:"OUT")
+	Company: [Company] @relation(name: "works_in", direction:"OUT")
+	Destination_Site: [Destination_Site] @relation(name: "requested_destination_site", direction:"OUT")
+	Request_ID: [Request_ID] @relation(name: "submits_request", direction:"OUT")
+	Personal_Capabilities: [Personal_Capabilities] @relation(name: "has_personal_capabilities", direction:"OUT")
+	Employee_Agreement: [Employee_Agreement] @relation(name: "has_employment_agreement", direction:"OUT")
+	Organizational_Positioning: [Organizational_Positioning] @relation(name: "has_organizational_positioning", direction:"OUT")
+	Business_Communication_Data: [Business_Communication_Data] @relation(name: "has_business_communication_data", direction:"OUT")
+	Private_Contact_Information: [Private_Contact_Information] @relation(name: "has_private_contact_information", direction:"OUT")
+	Basic_Employee_Data: [Basic_Employee_Data] @relation(name: "has_basic_employee_data", direction:"OUT")
+}
+
+type Item_Count {
+	name: String
+}
+
+type Item_Description {
+	name: String
+}
+
+type Item {
+	name: String
+	item: String
+}
+
+type Originated_Site_Person {
+	name: String
+}
+
+type Procurement_Code {
+	procurementCode: String
+	name: String
+	Invoice: [Invoice] @relation(name: "contains_invoice_id", direction:"OUT")
+}
+
+type Purchaser_person {
+	name: String
+}
+
+type Order {
+	orderID: ID!
+	Request_ID: [Request_ID] @relation(name: "contains_request_id", direction:"OUT")
+	Proposal: [Proposal] @relation(name: "ordered_from_selected_proposal_id", direction:"OUT")
+	Procurement_Code: [Procurement_Code] @relation(name: "has_procurement_code", direction:"OUT")
+}
+
+type Request_ID {
+	requestID: ID!
+	name: String
+	Procurement_Code: [Procurement_Code] @relation(name: "contains_requst", direction:"OUT")
+	Item: [Item] @relation(name: "requested_item_name", direction:"OUT")
+	Item_Description: [Item_Description] @relation(name: "requested_item_description", direction:"OUT")
+}
+
+type Proposal {
+	proposalID: ID!
+	Items_Quantity: [Items_Quantity] @relation(name: "received_items_quantity", direction:"OUT")
+	Proposed_Price: [Proposed_Price] @relation(name: "received_proposed_price", direction:"OUT")
+	Procurement_Code: [Procurement_Code] @relation(name: "has_procurement_code", direction:"OUT")
+}
+
+type Product_Subtype {
+	levelTwoID: ID!
+	name: String
+	Product_Type: [Product_Type] @relation(name: "subtype_belongs_to_type", direction:"OUT")
+}
+
+type Product_Type {
+	name: String
+	levelOneID: ID!
+	Product_Subtype: [Product_Subtype] @relation(name: "product_type_contains_subtype", direction:"OUT")
+}
+
+type Business_Partner_Business_Area {
+	businessAreaID: ID!
+	businessPartnerID: ID!
+	name: String
+	Business_Partner_Sites: [Business_Partner_Sites] @relation(name: "business_area_contains_business_partner_site", direction:"OUT")
+}
+
+type Business_Partner_Sites {
+	businessPartnerSiteID: ID!
+	businessPartnerID: ID!
+	name: String
+	Country: [Country] @relation(name: "site_is_located_in_country", direction:"OUT")
+	Business_Partner_Business_Area: [Business_Partner_Business_Area] @relation(name: "site_is_located_in_business_partner_business_area", direction:"OUT")
+	Business_Partner_Site_Address: [Business_Partner_Site_Address] @relation(name: "is_located_on_address", direction:"OUT")
+	Business_Partner_Site_City: [Business_Partner_Site_City] @relation(name: "is_located_in_city", direction:"OUT")
+	Headquarters: [Headquarters] @relation(name: "is_business_partner_headquarters", direction:"OUT")
+}
+
+type Services_And_Resources {
+	name: String
+	slaID: ID!
+	Monthly_Check: [Monthly_Check] @relation(name: "sla_has_monthly_check_services", direction:"OUT")
+	Emergency_On_Site: [Emergency_On_Site] @relation(name: "sla_has_emergency_on_site_services", direction:"OUT")
+	Remote_Assistance: [Remote_Assistance] @relation(name: "sla_has_remote_assistance_services", direction:"OUT")
+	Email_Supports: [Email_Supports] @relation(name: "sla_has_email_support_services", direction:"OUT")
+	Telephone_Supports: [Telephone_Supports] @relation(name: "sla_has_telephone_support_services", direction:"OUT")
+}
+
+type Monthly_Check {
+	checkMonthlyCheck: String
+	slaID: ID!
+}
+
+type Emergency_On_Site {
+	checkEmergencyOnSite: String
+	slaID: ID!
+}
+
+type Remote_Assistance {
+	checkRemoteAssistance: String
+	slaID: ID!
+}
+
+type Email_Supports {
+	checkEmailSupports: String
+	slaID: ID!
+}
+
+type Telephone_Supports {
+	slaID: ID!
+	checkTelephoneSupports: String
+}
+
+type Invoice {
+	invoiceID: ID!
+}
+
+type Service_Provider {
+	name: String
+	ServiceProviderID: ID!
+	Region: [Region] @relation(name: "is_distributed_in_regions", direction:"OUT")
+	Type_Of_Service: [Type_Of_Service] @relation(name: "has_type_of_service", direction:"OUT")
+	Sub_Contractor: [Sub_Contractor] @relation(name: "has_Sub_Contractors", direction:"OUT")
+	Total_Site: [Total_Site] @relation(name: "is_distributed_on_total_sites", direction:"OUT")
+	Business_Unit: [Business_Unit] @relation(name: "is_located_in_business_unit", direction:"OUT")
+	Country: [Country] @relation(name: "is_distributed_in_countries", direction:"OUT")
+	Risk_Criticality: [Risk_Criticality] @relation(name: "has_risk_criticality", direction:"OUT")
+	Sub_Sub_Contractor: [Sub_Sub_Contractor] @relation(name: "has_Sub_Sub_Contractors", direction:"OUT")
+	SLA_Service_Provider: [SLA_Service_Provider] @relation(name: "sla_signed_by_contract_party_service_provider", direction:"OUT")
+	Service_Agreements: [Service_Agreements] @relation(name: "has_connected_service_agreements", direction:"OUT")
+	Service_Provider_Contract: [Service_Provider_Contract] @relation(name: "has_connected_contracts", direction:"OUT")
+	Negative_News: [Negative_News] @relation(name: "has_negative_news", direction:"OUT")
+}
+
+type Region {
+	regionName: String
+	regionID: ID!
+	Country: [Country] @relation(name: "contains_countries", direction:"OUT")
+}
+
+type Type_Of_Service {
+	spTypeID: ID!
+	name: String
+	SubType_Of_Service: [SubType_Of_Service] @relation(name: "contains_subtype_of_service", direction:"OUT")
+	SubType_Of_Service: [SubType_Of_Service] @relation(name: "has_subtype_of_service", direction:"OUT")
+}
+
+type Sub_Contractor {
+	subContractorID: ID!
+	name: String
+	Sub_Contractor_Site: [Sub_Contractor_Site] @relation(name: "is_distributed_on_service_provider_site", direction:"OUT")
+	Sub_Sub_Contractor: [Sub_Sub_Contractor] @relation(name: "has_Sub_Sub_Contractors", direction:"OUT")
+	Type_Of_Service: [Type_Of_Service] @relation(name: "has_type_of_service", direction:"OUT")
+}
+
+type Total_Site {
+	name: String
+}
+
+type Country {
+	name: String
+	countryID: ID!
+	Region: [Region] @relation(name: "country_belongs_to_region", direction:"OUT")
+	Business_Partner_Sites: [Business_Partner_Sites] @relation(name: "country_contains_business_partner_sites", direction:"OUT")
+}
+
+type Risk_Criticality {
+	name: String
+}
+
+type Contracts {
+	contractID: ID!
+	Order: [Order] @relation(name: "contains_order_id", direction:"OUT")
+	Procurement_Code: [Procurement_Code] @relation(name: "has_procurement_code", direction:"OUT")
+	Employee: [Employee] @relation(name: "created_ontract", direction:"OUT")
+}
+
+type Business_Area {
+	businessAreaID: ID!
+	name: String
+	Business_Unit: [Business_Unit] @relation(name: "contains_business_unit", direction:"OUT")
+}
+
+type Destination_Site {
+	name: String
+	Destination_Address: [Destination_Address] @relation(name: "has_destination_address", direction:"OUT")
+}
+
+type Destination_Address {
+	address: String
+}
+
+type Company {
+	CompanyName: String
+}
+
+type Items_Quantity {
+	quantity: String
+}
+
+type Proposed_Price {
+	price: String
+}
+
+type Cancellation {
+	cancellationID: ID!
+	Procurement_Code: [Procurement_Code] @relation(name: "has_procurement_code", direction:"OUT")
+}
+
+type Personal_Capabilities {
+	name: String
+	personalCapabilitiesID: ID!
+	Driver_Licence: [Driver_Licence] @relation(name: "has_driver_licence", direction:"OUT")
+	Language: [Language] @relation(name: "speaks_languages", direction:"OUT")
+}
+
+type Driver_Licence {
+	name: String
+}
+
+type Language {
+	name: String
+}
+
+type Service_Provider_Contract {
+	contractName: String
+	contractID: ID!
+	Business_Unit: [Business_Unit] @relation(name: "contract_linked_to_BusinessUnit", direction:"OUT")
+	Signature_Date: [Signature_Date] @relation(name: "has_signature_date", direction:"OUT")
+	Contract_Description: [Contract_Description] @relation(name: "has_contract_description", direction:"OUT")
+	Contract_Number: [Contract_Number] @relation(name: "has_contract_number", direction:"OUT")
+}
+
+type Signature_Date {
+	contractID: ID!
+	name: String
+}
+
+type Business_Department {
+	businessDepartmentID: ID!
+	name: String
+}
+
+type Employee_Agreement {
+	name: String
+	employeeAgreementID: ID!
+	Employee_End_Working_Time: [Employee_End_Working_Time] @relation(name: "has_end_working_time", direction:"OUT")
+	Employee_Start_Working_Time: [Employee_Start_Working_Time] @relation(name: "has_start_working_time", direction:"OUT")
+	Employee_Start_Working_Date: [Employee_Start_Working_Date] @relation(name: "started_to_work_on", direction:"OUT")
+}
+
+type Organizational_Positioning {
+	organizationalPositioningID: ID!
+	name: String
+	Business_Entity: [Business_Entity] @relation(name: "employee_is_responsible_for_business_entity", direction:"OUT")
+	Business_Department: [Business_Department] @relation(name: "employee_is_responsible_for_business_department", direction:"OUT")
+	Business_Team: [Business_Team] @relation(name: "employee_is_responsible_for_business_team", direction:"OUT")
+	Business_Site: [Business_Site] @relation(name: "employee_is_responsible_for_business_site", direction:"OUT")
+	Enterprise_Holding: [Enterprise_Holding] @relation(name: "employee_is_responsible_for_holding", direction:"OUT")
+	Business_Unit: [Business_Unit] @relation(name: "employee_is_responsible_for_business_unit", direction:"OUT")
+}
+
+type Business_Communication_Data {
+	businessCommunicationID: ID!
+	name: String
+}
+
+type Private_Contact_Information {
+	privateContactID: ID!
+	name: String
+	Country: [Country] @relation(name: "live_in_the_country", direction:"OUT")
+}
+
+type Basic_Employee_Data {
+	name: String
+	basicEmployeeID: ID!
+	Employee_Gender: [Employee_Gender] @relation(name: "is_of_gender", direction:"OUT")
+	Employee_Number: [Employee_Number] @relation(name: "has_employee_number", direction:"OUT")
+}
+
+type Competitor_Product_Sortiment {
+	name: String
+	clientCompanyID: ID!
+	competitorID: ID!
+	Product_Type: [Product_Type] @relation(name: "contains_product_type", direction:"OUT")
+}
+
+type purchaserCompany {
+	purchaserCompany: String
+	invoiceCompany: [invoiceCompany] @relation(name: "PURCHASED_FROM", direction:"OUT")
+}
+
+type invoiceCompany {
+	invoiceCompany: String
+	shipTo: [shipTo] @relation(name: "SHIPPED_TO", direction:"OUT")
+}
+
+type Business_Team {
+	businessTeamID: ID!
+	name: String
+}
+
+type Business_Site {
+	name: String
+	businessSiteID: ID!
+}
+
+type Product_Price {
+	productSortimentID: ID!
+	price: String
+	Currency: [Currency] @relation(name: "price_currency", direction:"OUT")
+}
+
+type Currency {
+	currencyID: ID!
+	name: String
+	codeDescription: String
+}
+
+type Employee_End_Working_Time {
+	name: String
+}
+
+type Employee_Start_Working_Time {
+	name: String
+}
+
+type Employee_Start_Working_Date {
+	name: String
+}
+
+type Employee_Gender {
+	gender: String
+}
+
+type Employee_Number {
+	number: String
+}
+
+type Enterprise_Holding {
+	enterpriseHoldingID: ID!
+	name: String
+	Business_Area: [Business_Area] @relation(name: "contains_business_areas", direction:"OUT")
+}
+
+type Business_Partner_Site_City {
+	siteCity: String
+	businessPartnerSiteID: ID!
+	businessPartnerID: ID!
+	Business_Partner_Sites: [Business_Partner_Sites] @relation(name: "city_has_business_partner_sites", direction:"OUT")
+}
+
+type shipTo {
+	shipTo: String
+}
+
+type invoiceIssuer {
+	invoiceIssuer: String
+	invoiceCompany: [invoiceCompany] @relation(name: "ISSUED_FROM", direction:"OUT")
+}
+
+type Competitor_Business_Area {
+	businessAreaID: ID!
+	name: String
+	Competitor_Site: [Competitor_Site] @relation(name: "business_area_contains_competitor_site", direction:"OUT")
+}
+
+type Competitor_Site {
+	siteID: ID!
+	name: String
+	Competitor_Business_Area: [Competitor_Business_Area] @relation(name: "site_is_located_in_competitor_business_area", direction:"OUT")
+	Competitor_Site_Address: [Competitor_Site_Address] @relation(name: "is_located_on_address", direction:"OUT")
+	Competitor_Site_City: [Competitor_Site_City] @relation(name: "competitor_site_is_located_in_city", direction:"OUT")
+	Headquarters_Competitor_Site: [Headquarters_Competitor_Site] @relation(name: "is_competitor_headquarters", direction:"OUT")
+}
+
+type Product_Subype {
+	levelTwoID: ID!
+}
+
+type Calculation {
+	calculation: String
+	Value: [Value] @relation(name: "depreciation_calculation_value", direction:"OUT")
+	Method: [Method] @relation(name: "depreciation_calculation_method", direction:"OUT")
+}
+
+type Value {
+	value: String
+}
+
+type Method {
+	method: String
+}
+
+type PurchaserEmployee {
+	PurchaserEmployee: String
+	purchaserCompany: [purchaserCompany] @relation(name: "ORDERED_ITEM", direction:"OUT")
+}
+
+type Application_Name {
+	applicationID: ID!
+	name: String
+	Application_Connections_and_Details: [Application_Connections_and_Details] @relation(name: "has_application_connection_data", direction:"OUT")
+	General_Protection_Regulation: [General_Protection_Regulation] @relation(name: "has_GDPR_data", direction:"OUT")
+	Application_Mapping: [Application_Mapping] @relation(name: "has_mapping_data", direction:"OUT")
+	Application_Layers: [Application_Layers] @relation(name: "has_application_layer", direction:"OUT")
+	Application_Details: [Application_Details] @relation(name: "has_application_details_data", direction:"OUT")
+	Basic_Application_Data: [Basic_Application_Data] @relation(name: "has_basic_application_data", direction:"OUT")
+}
+
+type Application_Connections_and_Details {
+	applicationConAndDetailsID: ID!
+	name: String
+}
+
+type General_Protection_Regulation {
+	name: String
+	gdprID: ID!
+}
+
+type Application_Mapping {
+	applicationMappingID: ID!
+	name: String
+	Server_Mapped_To_Application: [Server_Mapped_To_Application] @relation(name: "has_mapped_servers", direction:"OUT")
+	Workspace_Mapped_To_Application: [Workspace_Mapped_To_Application] @relation(name: "has_mapped_workspaces", direction:"OUT")
+}
+
+type Application_Layers {
+	applicationLayersID: ID!
+	name: String
+}
+
+type Application_Details {
+	applicationDetailsID: ID!
+	name: String
+}
+
+type Basic_Application_Data {
+	basicApplicationID: ID!
+	name: String
+	Application_Platform: [Application_Platform] @relation(name: "is_installed_on_platform", direction:"OUT")
+	Application_Category: [Application_Category] @relation(name: "has_application_category", direction:"OUT")
+	Application_Version: [Application_Version] @relation(name: "has_application_version", direction:"OUT")
+	Ref_ID: [Ref_ID] @relation(name: "has_application_ref_id", direction:"OUT")
+}
+
+type Application_Platform {
+	platform: String
+}
+
+type Application_Category {
+	appcat_name: String
+}
+
+type Application_Version {
+	version: String
+}
+
+type Ref_ID {
+	refID: ID!
+}
+
+type Competitor_Business_Unit {
+	name: String
+	businessUnitID: ID!
+	Competitor_Business_Area: [Competitor_Business_Area] @relation(name: "is_located_in_competitor_business_area", direction:"OUT")
+}
+
+type Competitor_Site_City {
+	city: String
+	siteID: ID!
+	Competitor_Site: [Competitor_Site] @relation(name: "city_has_competitor_site", direction:"OUT")
+}
+
+type employeeFullName {
+	employeeFullName: String
+	startWorkingDate: [startWorkingDate] @relation(name: "WORKING_SINCE", direction:"OUT")
+}
+
+type startWorkingDate {
+	startWorkingDate: String
+}
+
+type Competitor_Site_Address {
+	siteAddress: String
+	siteID: ID!
+}
+
+type Headquarters_Competitor_Site {
+	checkHeadquarters: String
+	siteID: ID!
+}
+
+type Sub_Sub_Contractor {
+	subSubContractorName: String
+	subSubContractorID: ID!
+	Sub_Sub_Contractor_Site: [Sub_Sub_Contractor_Site] @relation(name: "is_distributed_on_sub_sub_contractor_sites", direction:"OUT")
+}
+
+type SLA_Service_Provider {
+	name: String
+}
+
+type Service_Agreements {
+	slaID: ID!
+	contractName: String
+	ServiceProviderID: ID!
+	Reffered_Person: [Reffered_Person] @relation(name: "has_agreement_reffered_person", direction:"OUT")
+	SLA_End_Date: [SLA_End_Date] @relation(name: "has_sla_end_date", direction:"OUT")
+	SLA_Start_Date: [SLA_Start_Date] @relation(name: "has_sla_start_date", direction:"OUT")
+	SLA_Number: [SLA_Number] @relation(name: "has_sla_number", direction:"OUT")
+	Services_And_Resources: [Services_And_Resources] @relation(name: "sla_has_services_and_resources", direction:"OUT")
+	SLA_Period: [SLA_Period] @relation(name: "has_sla_period", direction:"OUT")
+	SLA_Version: [SLA_Version] @relation(name: "has_sla_version", direction:"OUT")
+	Document_Owner: [Document_Owner] @relation(name: "has_document_owner", direction:"OUT")
+	Author: [Author] @relation(name: "sla_agreement_created_by_author", direction:"OUT")
+}
+
+type Negative_News {
+	negativeNewsRiskID: ID!
+	name: String
+}
+
+type Server_Mapped_To_Application {
+	assetSystemType: String
+}
+
+type Workspace_Mapped_To_Application {
+	assetSystemType: String
+}
+
+type Product_Name {
+	name: String
+	productSortimentID: ID!
+	Business_Partner: [Business_Partner] @relation(name: "product_was_ordered_by_client", direction:"OUT")
+	Order_Count: [Order_Count] @relation(name: "count_of_ordered_items_is", direction:"OUT")
+	Product_Subtype: [Product_Subtype] @relation(name: "product_subtype_is", direction:"OUT")
+	Product_Type: [Product_Type] @relation(name: "product_type_is", direction:"OUT")
+	Product_Price: [Product_Price] @relation(name: "at_ordered_price", direction:"OUT")
+	Order_Date: [Order_Date] @relation(name: "product_was_order_on", direction:"OUT")
+	Product_Description: [Product_Description] @relation(name: "has_description", direction:"OUT")
+	Product_Size: [Product_Size] @relation(name: "has_product_size", direction:"OUT")
+	Product_Manufacturer: [Product_Manufacturer] @relation(name: "has_manufacturer", direction:"OUT")
+	Weight: [Weight] @relation(name: "product_has_weight", direction:"OUT")
+}
+
+type Business_Partner {
+	businessPartnerID: ID!
+	name: String
+	Web_Sites: [Web_Sites] @relation(name: "has_web_site", direction:"OUT")
+	Business_Partner_Business_Unit: [Business_Partner_Business_Unit] @relation(name: "has_business_partner_business_units", direction:"OUT")
+	Business_Partner_Business_Area: [Business_Partner_Business_Area] @relation(name: "has_business_partner_business_areas", direction:"OUT")
+	Business_Partner_Sites: [Business_Partner_Sites] @relation(name: "business_partner_is_located_on_business_partner_sites", direction:"OUT")
+	Business_Partner_Portfolio_Year: [Business_Partner_Portfolio_Year] @relation(name: "has_portfolio_for_year", direction:"OUT")
+	Region: [Region] @relation(name: "business_partner_is_located_in_regions", direction:"OUT")
+	Country: [Country] @relation(name: "business_partner_is_located_in_countries", direction:"OUT")
+	Type_Of_Service: [Type_Of_Service] @relation(name: "gives_type_of_service", direction:"OUT")
+	Product_Name: [Product_Name] @relation(name: "has_ordered_client_product", direction:"OUT")
+	Business_Partner_Type: [Business_Partner_Type] @relation(name: "is_a_business_partner_type", direction:"OUT")
+}
+
+type Order_Count {
+	count: String
+	productSortimentID: ID!
+}
+
+type Order_Date {
+	productSortimentID: ID!
+	orderDate: String
+}
+
+type Product_Description {
+	description: String
+	productSortimentID: ID!
+}
+
+type Product_Size {
+	size: String
+	productSortimentID: ID!
+}
+
+type Product_Manufacturer {
+	productSortimentID: ID!
+	manufacturer: String
+	Product_Name: [Product_Name] @relation(name: "connected_to_product_name", direction:"OUT")
+}
+
+type Weight {
+	weight: String
+	productSortimentID: ID!
+}
+
+type Contract_Description {
+	contractID: ID!
+	name: String
+}
+
+type Contract_Number {
+	contractID: ID!
+	number: String
+}
+
+type SubType_Of_Service {
+	spSubTypeID: ID!
+	name: String
+}
+
+type Software {
+	softwareID: ID!
+	Software_Type: [Software_Type] @relation(name: "asset_software_type", direction:"OUT")
+	Software_Name: [Software_Name] @relation(name: "asset_software_name", direction:"OUT")
+}
+
+type Software_Type {
+	softwareType: String
+}
+
+type Software_Name {
+	softwareName: String
+}
+
+type Network_Scan {
+	deviceName: String
+	name: String
+	nsID: ID!
+	devicename: String
+	nodeID: ID!
+	Asset_Name: [Asset_Name] @relation(name: "has_scanned_assets", direction:"OUT")
+}
+
+type Asset_Name {
+	nodeID: ID!
+	name: String
+	Bandwidth: [Bandwidth] @relation(name: "asset_has_bandwidth", direction:"OUT")
+	Network_Scan_Type: [Network_Scan_Type] @relation(name: "asset_last_seen_by_scan_type", direction:"OUT")
+	Network_Scan_OS_Device: [Network_Scan_OS_Device] @relation(name: "has_network_scan_operating_system", direction:"OUT")
+	Network_Scan_IP_Address: [Network_Scan_IP_Address] @relation(name: "asset_has_ip_address", direction:"OUT")
+	Network_Scan_Description: [Network_Scan_Description] @relation(name: "has_network_scan_description", direction:"OUT")
+	Leasing: [Leasing] @relation(name: "has_leasing_data", direction:"OUT")
+	Depreciation: [Depreciation] @relation(name: "has_asset_depreciation", direction:"OUT")
+	IP_Info: [IP_Info] @relation(name: "has_ip_info", direction:"OUT")
+	Processor_Info: [Processor_Info] @relation(name: "has_processor_info_data", direction:"OUT")
+	Memory_Info: [Memory_Info] @relation(name: "has_memory_info_data", direction:"OUT")
+	Disk_Info: [Disk_Info] @relation(name: "has_disk_info_data", direction:"OUT")
+	General_Info: [General_Info] @relation(name: "has_general_info_data", direction:"OUT")
+	Software: [Software] @relation(name: "has_software_installed", direction:"OUT")
+}
+
+type Site {
+	siteID: ID!
+	name: String
+	Business_Unit: [Business_Unit] @relation(name: "is_located_in_business_unit", direction:"OUT")
+	Business_Area: [Business_Area] @relation(name: "is_located_in_business_area", direction:"OUT")
+}
+
+type Reffered_Person {
+	referredPersonName: String
+	slaID: ID!
+}
+
+type SLA_End_Date {
+	slaEndDate: String
+	slaID: ID!
+}
+
+type SLA_Start_Date {
+	slaID: ID!
+	slaStartDate: String
+}
+
+type SLA_Number {
+	slaID: ID!
+	slaNumber: String
+}
+
+type Business_Partner_Site_Address {
+	siteCity: String
+	businessPartnerSiteID: ID!
+	businessPartnerID: ID!
+}
+
+type Headquarters {
+	checkHeadquarters: String
+	businessPartnerSiteID: ID!
+	businessPartnerID: ID!
+}
+
+type SLA_Period {
+	slaPeriod: String
+	slaID: ID!
+}
+
+type SLA_Version {
+	name: String
+	slaID: ID!
+}
+
+type Document_Owner {
+	slaDocumentOwner: String
+	slaID: ID!
+}
+
+type Author {
+	slaAuthor: String
+}
+
+type Asset_Subtype {
+	name: String
+	assetSubtypeID: ID!
+	Asset_Subsubtype: [Asset_Subsubtype] @relation(name: "has_asset_subsubtype", direction:"OUT")
+	Asset_Name: [Asset_Name] @relation(name: "has_asset_name", direction:"OUT")
+}
+
+type Asset_Subsubtype {
+	assetSubsubtypeID: ID!
+	name: String
+}
+
+type Bandwidth {
+	id: ID!
+	name: String
+	nodeID: ID!
+	AVG_Latency: [AVG_Latency] @relation(name: "has_avg_latency_value", direction:"OUT")
+	Bandwidth_External_IP: [Bandwidth_External_IP] @relation(name: "has_external_IP", direction:"OUT")
+	Default_Gateway: [Default_Gateway] @relation(name: "has_default_gateway", direction:"OUT")
+	Bandwidth_Provider_Name: [Bandwidth_Provider_Name] @relation(name: "bandwidth_provided_by_company", direction:"OUT")
+}
+
+type Network_Scan_Type {
+	scanType: String
+	nodeID: ID!
+	nsID: ID!
+}
+
+type Network_Scan_OS_Device {
+	name: String
+	nodeID: ID!
+	nsID: ID!
+}
+
+type Network_Scan_IP_Address {
+	ipAddress: String
+	nodeID: ID!
+	nsID: ID!
+}
+
+type Network_Scan_Description {
+	nsID: ID!
+	name: String
+	nodeID: ID!
+}
+
+type Sub_Contractor_Site {
+	subContractorID: ID!
+	siteID: ID!
+	siteName: String
+	Business_Area: [Business_Area] @relation(name: "is_located_in_business_area", direction:"OUT")
+	Business_Unit: [Business_Unit] @relation(name: "is_located_in_business_unit", direction:"OUT")
+}
+
+type Competitor {
+	name: String
+	competitorID: ID!
+	Competitor_Product_Sortiment: [Competitor_Product_Sortiment] @relation(name: "has_product_sortiment", direction:"OUT")
+	Competitor_Site: [Competitor_Site] @relation(name: "is_located_on_competitor_sites", direction:"OUT")
+	Country: [Country] @relation(name: "competitor_is_located_in_countries", direction:"OUT")
+	Region: [Region] @relation(name: "competitor_is_located_in_regions", direction:"OUT")
+	Type_Of_Service: [Type_Of_Service] @relation(name: "competitor_gives_type_of_service", direction:"OUT")
+	Competitor_Business_Unit: [Competitor_Business_Unit] @relation(name: "has_competitor_business_units", direction:"OUT")
+	Competitor_Business_Area: [Competitor_Business_Area] @relation(name: "has_competitor_business_areas", direction:"OUT")
+}
+
+type Business_Partner_Type {
+	businessPartnerID: ID!
+	type: String
+	Business_Partner: [Business_Partner] @relation(name: "contains_business_partner_names", direction:"OUT")
+}
+
+type AVG_Latency {
+	latency: String
+	id: ID!
+}
+
+type Bandwidth_External_IP {
+	externalIP: String
+	id: ID!
+}
+
+type Default_Gateway {
+	defaultGateway: String
+	id: ID!
+}
+
+type Bandwidth_Provider_Name {
+	providerName: ID!
+	id: ID!
+}
+
+type Asset_Type {
+	name: String
+	assetTypeID: ID!
+	Asset_Subtype: [Asset_Subtype] @relation(name: "has_asset_sub_type", direction:"OUT")
+}
+
+type Assets_Category {
+	name: String
+	assetCategoryID: ID!
+	Asset_Type: [Asset_Type] @relation(name: "has_asset_type", direction:"OUT")
+}
+
+type IP_Info {
+	name: String
+	ipInfoID: ID!
+	IP_Address: [IP_Address] @relation(name: "asset_ip_address", direction:"OUT")
+	Subnet_Mask: [Subnet_Mask] @relation(name: "asset_subnet_mask", direction:"OUT")
+}
+
+type IP_Address {
+	ipAddress: String
+}
+
+type Subnet_Mask {
+	subnetMask: String
+}
+
+type Business_Partner_Portfolio_Year {
+	businessPartnerID: ID!
+	financePortfolioID: ID!
+	year: String
+	Financial_Ratios: [Financial_Ratios] @relation(name: "submitted_financial_ratios_value", direction:"OUT")
+	Cash_Flow_Statement: [Cash_Flow_Statement] @relation(name: "submitted_cashflow_statement_value", direction:"OUT")
+	Balance_Sheet: [Balance_Sheet] @relation(name: "submitted_balance_sheet_value", direction:"OUT")
+	Income_Statement: [Income_Statement] @relation(name: "submitted_income_statement_value", direction:"OUT")
+	Currency: [Currency] @relation(name: "portfolio_submitted_in_currency", direction:"OUT")
+}
+
+type Financial_Ratios {
+	value: String
+	financePortfolioID: ID!
+}
+
+type Cash_Flow_Statement {
+	value: String
+	financePortfolioID: ID!
+}
+
+type Balance_Sheet {
+	value: String
+	financePortfolioID: ID!
+}
+
+type Income_Statement {
+	value: String
+	financePortfolioID: ID!
+}
+
+type Sub_Sub_Contractor_Site {
+	siteID: ID!
+	siteName: String
+	subSubContractorID: ID!
+}
+
+type Web_Sites {
+	businessPartnerID: ID!
+	name: String
+}
+
+type Business_Partner_Business_Unit {
+	businessPartnerID: ID!
+	name: String
+	businessUnitID: ID!
+}
+
+type Leasing {
+	leasingID: ID!
+	name: String
+	Lease_Payment_Dynamics: [Lease_Payment_Dynamics] @relation(name: "asset_lease_payment_dynamics", direction:"OUT")
+	Lease_Duration: [Lease_Duration] @relation(name: "asset_lease_duration", direction:"OUT")
+	Date_Of_Leasing_Contract: [Date_Of_Leasing_Contract] @relation(name: "leasing_contract_date", direction:"OUT")
+	Payment_Start_Date: [Payment_Start_Date] @relation(name: "leasing_payment_start_date", direction:"OUT")
+	Name_of_the_Lessor: [Name_of_the_Lessor] @relation(name: "name_of_the_lessor", direction:"OUT")
+	Lease_Type: [Lease_Type] @relation(name: "asset_lease_type", direction:"OUT")
+}
+
+type Depreciation {
+	depreciationID: ID!
+	name: String
+	Calculation: [Calculation] @relation(name: "depreciation_calculation", direction:"OUT")
+	Year: [Year] @relation(name: "depreciation_calculation_year", direction:"OUT")
+	Residual_Value: [Residual_Value] @relation(name: "asset_residual_value", direction:"OUT")
+	Asset_Cost: [Asset_Cost] @relation(name: "asset_cost", direction:"OUT")
+	Asset_Lifespan: [Asset_Lifespan] @relation(name: "asset_lifespan", direction:"OUT")
+	Date_of_Purchase: [Date_of_Purchase] @relation(name: "asset_date_of_purchase", direction:"OUT")
+}
+
+type Processor_Info {
+	processorInfoID: ID!
+	name: String
+	Physical_Processor: [Physical_Processor] @relation(name: "asset_physical_processor", direction:"OUT")
+	Processor_Architecture: [Processor_Architecture] @relation(name: "asset_processor_architecture", direction:"OUT")
+	Processor_Manufacturer: [Processor_Manufacturer] @relation(name: "asset_processor_manufacturer", direction:"OUT")
+	Processor_Cores: [Processor_Cores] @relation(name: "asset_processor_cores", direction:"OUT")
+	Processor_Speed: [Processor_Speed] @relation(name: "asset_processor_speed", direction:"OUT")
+}
+
+type Memory_Info {
+	memoryInfoID: ID!
+	name: String
+}
+
+type Disk_Info {
+	name: String
+	diskInfoID: ID!
+	Free_SpaceGB: [Free_SpaceGB] @relation(name: "disk_free_space_GB", direction:"OUT")
+	Available_SpaceGB: [Available_SpaceGB] @relation(name: "disk_available_space_GB", direction:"OUT")
+	Disk_Name: [Disk_Name] @relation(name: "asset_disk_partition_name", direction:"OUT")
+}
+
+type General_Info {
+	generalInfoID: ID!
+	name: String
+	Manufacturer: [Manufacturer] @relation(name: "asset_manufacturer", direction:"OUT")
+	System_Model: [System_Model] @relation(name: "asset_system_model", direction:"OUT")
+	Serial_Number: [Serial_Number] @relation(name: "asset_serial_number", direction:"OUT")
+}
+
+type Manufacturer {
+	manufacturer: String
+}
+
+type System_Model {
+	systemModel: String
+}
+
+type Serial_Number {
+	serialNumber: String
+}
+
+type Free_SpaceGB {
+	freeSpace: String
+}
+
+type Available_SpaceGB {
+	availableSpace: String
+}
+
+type Disk_Name {
+	diskName: String
+}
+
+type Physical_Processor {
+	physicalProcessor: String
+}
+
+type Processor_Architecture {
+	processorArchitecture: String
+}
+
+type Processor_Manufacturer {
+	processorManufacturer: String
+}
+
+type Processor_Cores {
+	processorCores: String
+}
+
+type Processor_Speed {
+	processorSpeed: String
+}
+
+type Year {
+	year: String
+}
+
+type Residual_Value {
+	residualValue: ID!
+}
+
+type Asset_Cost {
+	assetCost: String
+}
+
+type Asset_Lifespan {
+	assetLifespan: String
+}
+
+type Date_of_Purchase {
+	purchaseDate: String
+}
+
+type Lease_Payment_Dynamics {
+	leasePaymentDynamics: String
+}
+
+type Lease_Duration {
+	leaseDuration: String
+}
+
+type Date_Of_Leasing_Contract {
+	dateOfLeasingContract: String
+}
+
+type Payment_Start_Date {
+	paymentStartDate: String
+}
+
+type Name_of_the_Lessor {
+	nameOfTheLessor: String
+}
+
+type Lease_Type {
+	leaseType: String
+}
+
+type Query {
+	Business_Unit(businessUnitID: ID,name: String): [Business_Unit]
+	Business_Entity(businessEntityID: ID,name: String): [Business_Entity]
+	Employee(name: String): [Employee]
+	Item_Count(name: String): [Item_Count]
+	Item_Description(name: String): [Item_Description]
+	Item(name: String,item: String): [Item]
+	Originated_Site_Person(name: String): [Originated_Site_Person]
+	Procurement_Code(procurementCode: String,name: String): [Procurement_Code]
+	Purchaser_person(name: String): [Purchaser_person]
+	Order(orderID: ID): [Order]
+	Request_ID(requestID: ID,name: String): [Request_ID]
+	Proposal(proposalID: ID): [Proposal]
+	Product_Subtype(levelTwoID: ID,name: String): [Product_Subtype]
+	Product_Type(name: String,levelOneID: ID): [Product_Type]
+	Business_Partner_Business_Area(businessAreaID: ID,businessPartnerID: ID,name: String): [Business_Partner_Business_Area]
+	Business_Partner_Sites(businessPartnerSiteID: ID,businessPartnerID: ID,name: String): [Business_Partner_Sites]
+	Services_And_Resources(name: String,slaID: ID): [Services_And_Resources]
+	Monthly_Check(checkMonthlyCheck: String,slaID: ID): [Monthly_Check]
+	Emergency_On_Site(checkEmergencyOnSite: String,slaID: ID): [Emergency_On_Site]
+	Remote_Assistance(checkRemoteAssistance: String,slaID: ID): [Remote_Assistance]
+	Email_Supports(checkEmailSupports: String,slaID: ID): [Email_Supports]
+	Telephone_Supports(slaID: ID,checkTelephoneSupports: String): [Telephone_Supports]
+	Invoice(invoiceID: ID): [Invoice]
+	Service_Provider(name: String,ServiceProviderID: ID): [Service_Provider]
+	Region(regionName: String,regionID: ID): [Region]
+	Type_Of_Service(spTypeID: ID,name: String): [Type_Of_Service]
+	Sub_Contractor(subContractorID: ID,name: String): [Sub_Contractor]
+	Total_Site(name: String): [Total_Site]
+	Country(name: String,countryID: ID): [Country]
+	Risk_Criticality(name: String): [Risk_Criticality]
+	Contracts(contractID: ID): [Contracts]
+	Business_Area(businessAreaID: ID,name: String): [Business_Area]
+	Destination_Site(name: String): [Destination_Site]
+	Destination_Address(address: String): [Destination_Address]
+	Company(CompanyName: String): [Company]
+	Items_Quantity(quantity: String): [Items_Quantity]
+	Proposed_Price(price: String): [Proposed_Price]
+	Cancellation(cancellationID: ID): [Cancellation]
+	Personal_Capabilities(name: String,personalCapabilitiesID: ID): [Personal_Capabilities]
+	Driver_Licence(name: String): [Driver_Licence]
+	Language(name: String): [Language]
+	Service_Provider_Contract(contractName: String,contractID: ID): [Service_Provider_Contract]
+	Signature_Date(contractID: ID,name: String): [Signature_Date]
+	Business_Department(businessDepartmentID: ID,name: String): [Business_Department]
+	Employee_Agreement(name: String,employeeAgreementID: ID): [Employee_Agreement]
+	Organizational_Positioning(organizationalPositioningID: ID,name: String): [Organizational_Positioning]
+	Business_Communication_Data(businessCommunicationID: ID,name: String): [Business_Communication_Data]
+	Private_Contact_Information(privateContactID: ID,name: String): [Private_Contact_Information]
+	Basic_Employee_Data(name: String,basicEmployeeID: ID): [Basic_Employee_Data]
+	Competitor_Product_Sortiment(name: String,clientCompanyID: ID,competitorID: ID): [Competitor_Product_Sortiment]
+	purchaserCompany(purchaserCompany: String): [purchaserCompany]
+	invoiceCompany(invoiceCompany: String): [invoiceCompany]
+	Business_Team(businessTeamID: ID,name: String): [Business_Team]
+	Business_Site(name: String,businessSiteID: ID): [Business_Site]
+	Product_Price(productSortimentID: ID,price: String): [Product_Price]
+	Currency(currencyID: ID,name: String,codeDescription: String): [Currency]
+	Employee_End_Working_Time(name: String): [Employee_End_Working_Time]
+	Employee_Start_Working_Time(name: String): [Employee_Start_Working_Time]
+	Employee_Start_Working_Date(name: String): [Employee_Start_Working_Date]
+	Employee_Gender(gender: String): [Employee_Gender]
+	Employee_Number(number: String): [Employee_Number]
+	Enterprise_Holding(enterpriseHoldingID: ID,name: String): [Enterprise_Holding]
+	Business_Partner_Site_City(siteCity: String,businessPartnerSiteID: ID,businessPartnerID: ID): [Business_Partner_Site_City]
+	shipTo(shipTo: String): [shipTo]
+	invoiceIssuer(invoiceIssuer: String): [invoiceIssuer]
+	Competitor_Business_Area(businessAreaID: ID,name: String): [Competitor_Business_Area]
+	Competitor_Site(siteID: ID,name: String): [Competitor_Site]
+	Product_Subype(levelTwoID: ID): [Product_Subype]
+	Calculation(calculation: String): [Calculation]
+	Value(value: String): [Value]
+	Method(method: String): [Method]
+	PurchaserEmployee(PurchaserEmployee: String): [PurchaserEmployee]
+	Application_Name(applicationID: ID,name: String): [Application_Name]
+	Application_Connections_and_Details(applicationConAndDetailsID: ID,name: String): [Application_Connections_and_Details]
+	General_Protection_Regulation(name: String,gdprID: ID): [General_Protection_Regulation]
+	Application_Mapping(applicationMappingID: ID,name: String): [Application_Mapping]
+	Application_Layers(applicationLayersID: ID,name: String): [Application_Layers]
+	Application_Details(applicationDetailsID: ID,name: String): [Application_Details]
+	Basic_Application_Data(basicApplicationID: ID,name: String): [Basic_Application_Data]
+	Application_Platform(platform: String): [Application_Platform]
+	Application_Category(appcat_name: String): [Application_Category]
+	Application_Version(version: String): [Application_Version]
+	Ref_ID(refID: ID): [Ref_ID]
+	Competitor_Business_Unit(name: String,businessUnitID: ID): [Competitor_Business_Unit]
+	Competitor_Site_City(city: String,siteID: ID): [Competitor_Site_City]
+	employeeFullName(employeeFullName: String): [employeeFullName]
+	startWorkingDate(startWorkingDate: String): [startWorkingDate]
+	Competitor_Site_Address(siteAddress: String,siteID: ID): [Competitor_Site_Address]
+	Headquarters_Competitor_Site(checkHeadquarters: String,siteID: ID): [Headquarters_Competitor_Site]
+	Sub_Sub_Contractor(subSubContractorName: String,subSubContractorID: ID): [Sub_Sub_Contractor]
+	SLA_Service_Provider(name: String): [SLA_Service_Provider]
+	Service_Agreements(slaID: ID,contractName: String,ServiceProviderID: ID): [Service_Agreements]
+	Negative_News(negativeNewsRiskID: ID,name: String): [Negative_News]
+	Server_Mapped_To_Application(assetSystemType: String): [Server_Mapped_To_Application]
+	Workspace_Mapped_To_Application(assetSystemType: String): [Workspace_Mapped_To_Application]
+	Product_Name(name: String,productSortimentID: ID): [Product_Name]
+	Business_Partner(businessPartnerID: ID,name: String): [Business_Partner]
+	Order_Count(count: String,productSortimentID: ID): [Order_Count]
+	Order_Date(productSortimentID: ID,orderDate: String): [Order_Date]
+	Product_Description(description: String,productSortimentID: ID): [Product_Description]
+	Product_Size(size: String,productSortimentID: ID): [Product_Size]
+	Product_Manufacturer(productSortimentID: ID,manufacturer: String): [Product_Manufacturer]
+	Weight(weight: String,productSortimentID: ID): [Weight]
+	Contract_Description(contractID: ID,name: String): [Contract_Description]
+	Contract_Number(contractID: ID,number: String): [Contract_Number]
+	SubType_Of_Service(spSubTypeID: ID,name: String): [SubType_Of_Service]
+	Software(softwareID: ID): [Software]
+	Software_Type(softwareType: String): [Software_Type]
+	Software_Name(softwareName: String): [Software_Name]
+	Network_Scan(deviceName: String,name: String,nsID: ID,devicename: String,nodeID: ID): [Network_Scan]
+	Asset_Name(nodeID: ID,name: String): [Asset_Name]
+	Site(siteID: ID,name: String): [Site]
+	Reffered_Person(referredPersonName: String,slaID: ID): [Reffered_Person]
+	SLA_End_Date(slaEndDate: String,slaID: ID): [SLA_End_Date]
+	SLA_Start_Date(slaID: ID,slaStartDate: String): [SLA_Start_Date]
+	SLA_Number(slaID: ID,slaNumber: String): [SLA_Number]
+	Business_Partner_Site_Address(siteCity: String,businessPartnerSiteID: ID,businessPartnerID: ID): [Business_Partner_Site_Address]
+	Headquarters(checkHeadquarters: String,businessPartnerSiteID: ID,businessPartnerID: ID): [Headquarters]
+	SLA_Period(slaPeriod: String,slaID: ID): [SLA_Period]
+	SLA_Version(name: String,slaID: ID): [SLA_Version]
+	Document_Owner(slaDocumentOwner: String,slaID: ID): [Document_Owner]
+	Author(slaAuthor: String): [Author]
+	Asset_Subtype(name: String,assetSubtypeID: ID): [Asset_Subtype]
+	Asset_Subsubtype(assetSubsubtypeID: ID,name: String): [Asset_Subsubtype]
+	Bandwidth(id: ID,name: String,nodeID: ID): [Bandwidth]
+	Network_Scan_Type(scanType: String,nodeID: ID,nsID: ID): [Network_Scan_Type]
+	Network_Scan_OS_Device(name: String,nodeID: ID,nsID: ID): [Network_Scan_OS_Device]
+	Network_Scan_IP_Address(ipAddress: String,nodeID: ID,nsID: ID): [Network_Scan_IP_Address]
+	Network_Scan_Description(nsID: ID,name: String,nodeID: ID): [Network_Scan_Description]
+	Sub_Contractor_Site(subContractorID: ID,siteID: ID,siteName: String): [Sub_Contractor_Site]
+	Competitor(name: String,competitorID: ID): [Competitor]
+	Business_Partner_Type(businessPartnerID: ID,type: String): [Business_Partner_Type]
+	AVG_Latency(latency: String,id: ID): [AVG_Latency]
+	Bandwidth_External_IP(externalIP: String,id: ID): [Bandwidth_External_IP]
+	Default_Gateway(defaultGateway: String,id: ID): [Default_Gateway]
+	Bandwidth_Provider_Name(providerName: ID,id: ID): [Bandwidth_Provider_Name]
+	Asset_Type(name: String,assetTypeID: ID): [Asset_Type]
+	Assets_Category(name: String,assetCategoryID: ID): [Assets_Category]
+	IP_Info(name: String,ipInfoID: ID): [IP_Info]
+	IP_Address(ipAddress: String): [IP_Address]
+	Subnet_Mask(subnetMask: String): [Subnet_Mask]
+	Business_Partner_Portfolio_Year(businessPartnerID: ID,financePortfolioID: ID,year: String): [Business_Partner_Portfolio_Year]
+	Financial_Ratios(value: String,financePortfolioID: ID): [Financial_Ratios]
+	Cash_Flow_Statement(value: String,financePortfolioID: ID): [Cash_Flow_Statement]
+	Balance_Sheet(value: String,financePortfolioID: ID): [Balance_Sheet]
+	Income_Statement(value: String,financePortfolioID: ID): [Income_Statement]
+	Sub_Sub_Contractor_Site(siteID: ID,siteName: String,subSubContractorID: ID): [Sub_Sub_Contractor_Site]
+	Web_Sites(businessPartnerID: ID,name: String): [Web_Sites]
+	Business_Partner_Business_Unit(businessPartnerID: ID,name: String,businessUnitID: ID): [Business_Partner_Business_Unit]
+	Leasing(leasingID: ID,name: String): [Leasing]
+	Depreciation(depreciationID: ID,name: String): [Depreciation]
+	Processor_Info(processorInfoID: ID,name: String): [Processor_Info]
+	Memory_Info(memoryInfoID: ID,name: String): [Memory_Info]
+	Disk_Info(name: String,diskInfoID: ID): [Disk_Info]
+	General_Info(generalInfoID: ID,name: String): [General_Info]
+	Manufacturer(manufacturer: String): [Manufacturer]
+	System_Model(systemModel: String): [System_Model]
+	Serial_Number(serialNumber: String): [Serial_Number]
+	Free_SpaceGB(freeSpace: String): [Free_SpaceGB]
+	Available_SpaceGB(availableSpace: String): [Available_SpaceGB]
+	Disk_Name(diskName: String): [Disk_Name]
+	Physical_Processor(physicalProcessor: String): [Physical_Processor]
+	Processor_Architecture(processorArchitecture: String): [Processor_Architecture]
+	Processor_Manufacturer(processorManufacturer: String): [Processor_Manufacturer]
+	Processor_Cores(processorCores: String): [Processor_Cores]
+	Processor_Speed(processorSpeed: String): [Processor_Speed]
+	Year(year: String): [Year]
+	Residual_Value(residualValue: ID): [Residual_Value]
+	Asset_Cost(assetCost: String): [Asset_Cost]
+	Asset_Lifespan(assetLifespan: String): [Asset_Lifespan]
+	Date_of_Purchase(purchaseDate: String): [Date_of_Purchase]
+	Lease_Payment_Dynamics(leasePaymentDynamics: String): [Lease_Payment_Dynamics]
+	Lease_Duration(leaseDuration: String): [Lease_Duration]
+	Date_Of_Leasing_Contract(dateOfLeasingContract: String): [Date_Of_Leasing_Contract]
+	Payment_Start_Date(paymentStartDate: String): [Payment_Start_Date]
+	Name_of_the_Lessor(nameOfTheLessor: String): [Name_of_the_Lessor]
+	Lease_Type(leaseType: String): [Lease_Type]
+}
